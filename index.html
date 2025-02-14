@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haptic Navigation Menu with Blog Post Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0f7fa, #80deea);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        nav {
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.1);
+            color: #4db6ac;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li {
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 1.1em;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: -5px;
+            left: 0;
+            background-color: #4db6ac;
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #4db6ac;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .menu-icon {
+            display: none;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                background-color: #222;
+                position: absolute;
+                top: 60px;
+                right: 0;
+                width: 200px;
+                border-radius: 0 0 0 10px;
+                opacity: 0;
+                transform: translateX(100%);
+                transition: all 0.5s ease;
+            }
+
+            .nav-links.show {
+                display: flex;
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .nav-links li {
+                margin: 20px 0;
+                text-align: center;
+            }
+
+            .menu-icon {
+                display: block;
+            }
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            animation: fadeIn 1.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .editor-section {
+            margin: 40px auto;
+            max-width: 800px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            animation: slideUp 1s ease;
+        }
+
+        .editor-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .editor-section input, .editor-section textarea {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        .editor-section input:focus, .editor-section textarea:focus {
+            border-color: #4db6ac;
+            outline: none;
+        }
+
+        .editor-section button {
+            padding: 10px 15px;
+            background-color: #4db6ac;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .editor-section button:hover {
+            background-color: #388e7b;
+            transform: translateY(-2px);
+        }
+
+        .blog-posts {
+            margin: 20px auto;
+            max-width: 800px;
+        }
+
+        .post-item {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            padding: 20px;
+            transition: transform 0.3s;
+            text-align: left;
+        }
+
+        .post-item:hover {
+            transform: scale(1.03);
+        }
+
+        .delete-btn {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #e57373;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .delete-btn:hover {
+            background-color: #c62828;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #333;
+            color: #fff;
+            font-size: 0.9em;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">Manish's Blog</div>
+    <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#posts">Posts</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="menu-icon"><i class="fas fa-bars"></i></div>
+</nav>
+
+<div class="content" id="blogContent">
+    <h2>Welcome to My Blog!</h2>
+    <div class="blog-posts" id="blogPosts"></div>
+</div>
+
+<div class="editor-section">
+    <h3>Create a New Blog Post</h3>
+    <input type="text" id="postTitle" placeholder="Enter post title" />
+    <textarea id="postContent" placeholder="Enter post content"></textarea>
+    <button onclick="addPost()">Publish Post</button>
+</div>
+
+<footer>
+    &copy; 2025 Manish's Blog | All Rights Reserved.
+</footer>
+
+<script>
+    const menuIcon = document.querySelector('.menu-icon');
+    const navLinks = document.querySelector('.nav-links');
+
+    menuIcon.addEventListener('click', () => {
+        navLinks.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!navLinks.contains(event.target) && !menuIcon.contains(event.target)) {
+            navLinks.classList.remove('show');
+        }
+    });
+
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
+            }
+            navLinks.classList.remove('show');
+        });
+    });
+
+    function addPost() {
+        const title = document.getElementById('postTitle').value.trim();
+        const content = document.getElementById('postContent').value.trim();
+        const blogPosts = document.getElementById('blogPosts');
+
+        if (title && content) {
+            const postDiv = document.createElement('div');
+            postDiv.classList.add('post-item');
+            postDiv.innerHTML = `<h3>${title}</h3><p>${content}</p>`;
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.classList.add('delete-btn');
+            deleteBtn.onclick = () => blogPosts.removeChild(postDiv);
+
+            postDiv.appendChild(deleteBtn);
+            blogPosts.appendChild(postDiv);
+
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postContent').value = '';
+        } else {
+            alert('Please enter both title and content.');
+        }
+    }
+</script>
+
+</body>
+</html>
